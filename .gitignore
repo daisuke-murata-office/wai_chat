@@ -2,6 +2,9 @@
 
 # dependencies
 /node_modules
+node_modules/
+/soel-plus
+soel-plus/
 /.pnp
 .pnp.*
 .yarn/*

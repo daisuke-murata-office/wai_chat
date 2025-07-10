@@ -13,15 +13,19 @@ export default function Home() {
   const createRoom = () => {
     const newRoomId = generateRoomId();
     setRoomId(newRoomId);
+    // 少し待ってから自動的にルームに移動
+    setTimeout(() => {
+      window.location.href = `/room/${newRoomId}`;
+    }, 100);
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">SOE.L</h1>
-          <p className="text-gray-600">Sense Of Empathy, Lively</p>
-          <p className="text-sm text-gray-500 mt-2">オンラインセミナー反応システム</p>
+          <h1 className="text-3xl font-bold text-gray-800 mb-2">ワイチャ！</h1>
+          <p className="text-gray-800">ワイワイ・チャット！</p>
+          <p className="text-sm text-gray-700 mt-2">オンラインセミナー反応システム</p>
         </div>
 
         <div className="space-y-6">
@@ -35,7 +39,7 @@ export default function Home() {
             </button>
             {roomId && (
               <div className="mt-4 p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600 mb-2">ルームID:</p>
+                <p className="text-sm text-gray-800 mb-2">ルームID:</p>
                 <p className="text-lg font-mono font-bold text-blue-600">{roomId}</p>
                 <Link
                   href={`/room/${roomId}`}
@@ -73,7 +77,7 @@ export default function Home() {
         </div>
 
         <div className="mt-8 text-center">
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-700">
             匿名でワンクリック反応・リアルタイム共有
           </p>
         </div>
