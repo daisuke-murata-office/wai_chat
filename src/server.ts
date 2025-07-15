@@ -1,6 +1,20 @@
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
+interface Message {
+  id: string;
+  message: string;
+  type: 'reaction' | 'question' | 'comment';
+  timestamp: string;
+  replies: Reply[];
+}
+
+interface Reply {
+  id: string;
+  reply: string;
+  timestamp: string;
+}
+
 const server = createServer();
 const io = new Server(server, {
   cors: {
@@ -27,7 +41,7 @@ io.on('connection', (socket) => {
   });
 
   // 反応を送信
-  socket.on('send-reaction', (data: { roomId: string, message: string, type: 'reaction' | 'question' }) => {
+  socket.on('send-reaction', (data: { roomId: string, message: string, type: 'reaction' | 'question' | 'comment' }) => {
     const messageData = {
       id: Date.now().toString(),
       message: data.message,
@@ -50,7 +64,7 @@ io.on('connection', (socket) => {
   // 回答を送信
   socket.on('send-reply', (data: { roomId: string, messageId: string, reply: string }) => {
     const messages = roomMessages.get(data.roomId) || [];
-    const messageIndex = messages.findIndex(msg => msg.id === data.messageId);
+    const messageIndex = messages.findIndex((msg: Message) => msg.id === data.messageId);
     
     if (messageIndex !== -1) {
       const replyData = {
@@ -73,7 +87,7 @@ io.on('connection', (socket) => {
     const exportData = {
       roomId: data.roomId,
       exportTime: new Date().toISOString(),
-      messages: messages.map(msg => ({
+      messages: messages.map((msg: Message) => ({
         timestamp: msg.timestamp,
         type: msg.type,
         message: msg.message,
@@ -93,7 +107,7 @@ io.on('connection', (socket) => {
 });
 
 const PORT = process.env.PORT || 3001;
-server.listen(PORT, '0.0.0.0', () => {
+server.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Socket.IO server running on port ${PORT}`);
   console.log(`Access from local network: http://[YOUR-IP]:${PORT}`);
 });

@@ -25,7 +25,6 @@ export default function Home() {
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-800 mb-2">ワイチャ！</h1>
           <p className="text-gray-800">ワイワイ・チャット！</p>
-          <p className="text-sm text-gray-700 mt-2">オンラインセミナー反応システム</p>
         </div>
 
         <div className="space-y-6">
