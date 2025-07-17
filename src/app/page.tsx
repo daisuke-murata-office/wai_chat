@@ -29,7 +29,7 @@ export default function Home() {
 
         <div className="space-y-6">
           <div>
-            <h2 className="text-lg font-semibold text-gray-800 mb-3">新しいRoomを作成</h2>
+            <h2 className="text-lg font-semibold text-gray-800 mb-3">新しいルームを作成</h2>
             <button
               onClick={createRoom}
               className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition-colors"
