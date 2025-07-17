@@ -119,8 +119,9 @@ http://[PCのIPアドレス]:3000
 
 ### 本番環境での仕様
 - 環境変数`NODE_ENV=production`で本番モードを判定
-- Socket.IO接続URLが自動的に本番環境用に設定される
-- Next.jsプロキシ設定が本番環境のポート構成に対応
+- Socket.IO接続はNext.jsプロキシ経由で内部ポート10001にルーティング
+- 外部ポート制限を回避してフロントエンドは`window.location.origin`で接続
+- Next.jsリライトルールが`/socket.io/*`を内部的にSocket.IOサーバーに転送
 
 ## 注意事項
 
