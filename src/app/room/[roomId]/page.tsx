@@ -53,7 +53,7 @@ export default function Room() {
 
   useEffect(() => {
     const socketUrl = process.env.NODE_ENV === 'production' 
-      ? `${window.location.protocol}//${window.location.hostname}:${window.location.port ? Number(window.location.port) + 1 : 10001}`
+      ? window.location.origin  // Next.jsプロキシ経由でSocket.IOに接続
       : `http://${window.location.hostname}:3001`;
     const newSocket = io(socketUrl);
     setSocket(newSocket);
