@@ -6,6 +6,10 @@ const nextConfig = {
       const socketPort = process.env.PORT ? Number(process.env.PORT) + 1 : 10001;
       return [
         {
+          source: '/socket.io/health',
+          destination: `http://localhost:${socketPort}/health`,
+        },
+        {
           source: '/socket.io',
           destination: `http://localhost:${socketPort}/socket.io`,
         },
@@ -18,6 +22,10 @@ const nextConfig = {
       // 開発環境では別ポート
       const socketHost = process.env.SOCKET_HOST || 'localhost';
       return [
+        {
+          source: '/socket.io/health',
+          destination: `http://${socketHost}:3001/health`,
+        },
         {
           source: '/socket.io',
           destination: `http://${socketHost}:3001/socket.io`,

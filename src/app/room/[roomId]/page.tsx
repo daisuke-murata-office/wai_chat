@@ -59,11 +59,27 @@ export default function Room() {
     console.log('Socket.IO接続URL:', socketUrl);
     console.log('NODE_ENV:', process.env.NODE_ENV);
     
+    // 本番環境では接続前にヘルスチェック
+    if (process.env.NODE_ENV === 'production') {
+      console.log('本番環境のヘルスチェック開始...');
+      fetch('/socket.io/health')
+        .then(response => response.json())
+        .then(data => {
+          console.log('ヘルスチェック結果:', data);
+        })
+        .catch(error => {
+          console.error('ヘルスチェック失敗:', error);
+        });
+    }
+    
     const newSocket = io(socketUrl, {
-      transports: ['polling'],
-      timeout: 20000,
+      transports: ['polling', 'websocket'],
+      timeout: 60000,
       forceNew: true,
-      upgrade: false
+      upgrade: true,
+      rememberUpgrade: false,
+      pingTimeout: 60000,
+      pingInterval: 25000
     });
     setSocket(newSocket);
 

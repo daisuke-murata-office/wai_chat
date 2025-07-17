@@ -1,5 +1,6 @@
 import { createServer } from 'http';
 import { Server } from 'socket.io';
+import { URL } from 'url';
 
 interface Message {
   id: string;
@@ -15,14 +16,32 @@ interface Reply {
   timestamp: string;
 }
 
-const server = createServer();
+const server = createServer((req, res) => {
+  // ヘルスチェック機能を追加
+  if (req.url === '/health' || req.url === '/socket.io/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ 
+      status: 'ok', 
+      timestamp: new Date().toISOString(),
+      connections: io ? io.sockets.sockets.size : 0
+    }));
+    return;
+  }
+  
+  // その他のリクエストは404
+  res.writeHead(404, { 'Content-Type': 'text/plain' });
+  res.end('Not Found');
+});
+
 const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"]
   },
   transports: ['websocket', 'polling'],
-  allowEIO3: true
+  allowEIO3: true,
+  pingTimeout: 60000,
+  pingInterval: 25000
 });
 
 // 接続中のユーザーを管理
