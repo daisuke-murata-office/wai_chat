@@ -55,15 +55,30 @@ export default function Room() {
     const socketUrl = process.env.NODE_ENV === 'production' 
       ? window.location.origin  // Next.jsプロキシ経由でSocket.IOに接続
       : `http://${window.location.hostname}:3001`;
-    const newSocket = io(socketUrl);
+    
+    console.log('Socket.IO接続URL:', socketUrl);
+    console.log('NODE_ENV:', process.env.NODE_ENV);
+    
+    const newSocket = io(socketUrl, {
+      transports: ['websocket', 'polling'],
+      timeout: 20000,
+      forceNew: true
+    });
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
+      console.log('Socket.IO接続成功');
       setConnected(true);
       newSocket.emit('join-room', roomId);
     });
 
-    newSocket.on('disconnect', () => {
+    newSocket.on('disconnect', (reason) => {
+      console.log('Socket.IO切断:', reason);
+      setConnected(false);
+    });
+
+    newSocket.on('connect_error', (error) => {
+      console.error('Socket.IO接続エラー:', error);
       setConnected(false);
     });
 

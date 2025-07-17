@@ -20,7 +20,9 @@ const io = new Server(server, {
   cors: {
     origin: "*",
     methods: ["GET", "POST"]
-  }
+  },
+  transports: ['websocket', 'polling'],
+  allowEIO3: true
 });
 
 // 接続中のユーザーを管理
@@ -29,6 +31,7 @@ const roomMessages = new Map();
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
+  console.log('Current connections:', io.sockets.sockets.size);
 
   // ルームに参加
   socket.on('join-room', (roomId: string) => {
@@ -100,8 +103,9 @@ io.on('connection', (socket) => {
   });
 
   // 切断処理
-  socket.on('disconnect', () => {
-    console.log('User disconnected:', socket.id);
+  socket.on('disconnect', (reason) => {
+    console.log('User disconnected:', socket.id, 'Reason:', reason);
+    console.log('Remaining connections:', io.sockets.sockets.size);
     connectedUsers.delete(socket.id);
   });
 });
