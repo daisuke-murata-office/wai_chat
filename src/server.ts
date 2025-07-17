@@ -106,8 +106,8 @@ io.on('connection', (socket) => {
   });
 });
 
-const PORT = process.env.PORT || 3001;
-server.listen(Number(PORT), '0.0.0.0', () => {
-  console.log(`Socket.IO server running on port ${PORT}`);
-  console.log(`Access from local network: http://[YOUR-IP]:${PORT}`);
+const SOCKET_PORT = process.env.SOCKET_PORT || 3001;
+server.listen(Number(SOCKET_PORT), '0.0.0.0', () => {
+  console.log(`Socket.IO server running on port ${SOCKET_PORT}`);
+  console.log(`Access from local network: http://[YOUR-IP]:${SOCKET_PORT}`);
 });
