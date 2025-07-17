@@ -106,10 +106,12 @@ io.on('connection', (socket) => {
   // 会話ログをエクスポート
   socket.on('export-chat', (data: { roomId: string }) => {
     const messages = roomMessages.get(data.roomId) || [];
+    // リアクション（reaction）タイプのメッセージを除外し、質問とコメントのみをエクスポート
+    const filteredMessages = messages.filter((msg: Message) => msg.type !== 'reaction');
     const exportData = {
       roomId: data.roomId,
       exportTime: new Date().toISOString(),
-      messages: messages.map((msg: Message) => ({
+      messages: filteredMessages.map((msg: Message) => ({
         timestamp: msg.timestamp,
         type: msg.type,
         message: msg.message,
@@ -118,7 +120,7 @@ io.on('connection', (socket) => {
     };
     
     socket.emit('chat-exported', exportData);
-    console.log(`Chat exported for room ${data.roomId}`);
+    console.log(`Chat exported for room ${data.roomId} (${filteredMessages.length} messages, reactions excluded)`);
   });
 
   // 切断処理
