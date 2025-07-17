@@ -183,7 +183,7 @@ export default function Room() {
         <div className="bg-white rounded-lg shadow-lg p-6 mb-6 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">セミナールーム</h1>
+              <h1 className="text-2xl font-bold text-gray-800">Room</h1>
               <p className="text-gray-800">ルームID: <span className="font-mono font-bold text-blue-600">{roomId}</span></p>
             </div>
             <div className="flex items-center gap-4">
