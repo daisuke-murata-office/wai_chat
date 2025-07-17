@@ -6,6 +6,10 @@ const nextConfig = {
       const socketPort = process.env.PORT ? Number(process.env.PORT) + 1 : 10001;
       return [
         {
+          source: '/socket.io',
+          destination: `http://localhost:${socketPort}/socket.io`,
+        },
+        {
           source: '/socket.io/:path*',
           destination: `http://localhost:${socketPort}/socket.io/:path*`,
         },
@@ -15,6 +19,10 @@ const nextConfig = {
       const socketHost = process.env.SOCKET_HOST || 'localhost';
       return [
         {
+          source: '/socket.io',
+          destination: `http://${socketHost}:3001/socket.io`,
+        },
+        {
           source: '/socket.io/:path*',
           destination: `http://${socketHost}:3001/socket.io/:path*`,
         },
@@ -23,6 +31,23 @@ const nextConfig = {
   },
   async headers() {
     return [
+      {
+        source: '/socket.io',
+        headers: [
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*',
+          },
+          {
+            key: 'Access-Control-Allow-Methods',
+            value: 'GET, POST, PUT, DELETE, OPTIONS',
+          },
+          {
+            key: 'Access-Control-Allow-Headers',
+            value: 'X-Requested-With, Content-Type, Authorization',
+          },
+        ],
+      },
       {
         source: '/socket.io/:path*',
         headers: [

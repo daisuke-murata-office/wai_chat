@@ -60,11 +60,10 @@ export default function Room() {
     console.log('NODE_ENV:', process.env.NODE_ENV);
     
     const newSocket = io(socketUrl, {
-      transports: ['polling', 'websocket'],
+      transports: ['polling'],
       timeout: 20000,
       forceNew: true,
-      upgrade: true,
-      rememberUpgrade: false
+      upgrade: false
     });
     setSocket(newSocket);
 
