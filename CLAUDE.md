@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## プロジェクト概要
 
-ワイチャ！は、オンラインセミナー中に匿名でリアルタイム反応・質問投稿・回答機能を提供するセミナー反応システムです。アプリケーションの構成：
+ワイチャ！は、オンラインセミナー中に匿名でリアルタイム反応・質問投稿・回答機能を提供するチャット反応システムです。アプリケーションの構成：
 
 - **フロントエンド**: Next.js 14 + React + TypeScript
 - **リアルタイム通信**: Socket.IOサーバー（開発: ポート3001、本番: $PORT+1）
@@ -49,7 +49,7 @@ npx tsc --noEmit    # TypeScript型チェック
 
 ### コアコンポーネント
 - **ホームページ** (`src/app/page.tsx`): ルーム作成・参加インターフェース
-- **ルームページ** (`src/app/room/[roomId]/page.tsx`): メインセミナールーム（反応ボタン付き）
+- **ルームページ** (`src/app/room/[roomId]/page.tsx`): メインRoom（反応ボタン付き）
 - **Socket.IOサーバー** (`src/server.ts`): リアルタイム通信ハンドラー
 
 ### 主要機能の実装
@@ -96,7 +96,7 @@ src/
 ├── app/
 │   ├── page.tsx              # ホームページ（ルーム作成・参加、即座リダイレクト）
 │   ├── room/[roomId]/
-│   │   └── page.tsx          # セミナールーム（チャット、回答、エクスポート）
+│   │   └── page.tsx          # Room（チャット、回答、エクスポート）
 │   └── globals.css           # TailwindCSS imports
 ├── server.ts                 # Socket.IOサーバー（回答・エクスポート機能含む）
 └── ...
