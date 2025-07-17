@@ -137,4 +137,6 @@ const SOCKET_PORT = process.env.NODE_ENV === 'production'
 server.listen(Number(SOCKET_PORT), '0.0.0.0', () => {
   console.log(`Socket.IO server running on port ${SOCKET_PORT}`);
   console.log(`Access from local network: http://[YOUR-IP]:${SOCKET_PORT}`);
+  console.log(`Health check available at: http://localhost:${SOCKET_PORT}/health`);
+  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });

@@ -60,88 +60,124 @@ export default function Room() {
     console.log('NODE_ENV:', process.env.NODE_ENV);
     
     // 本番環境では接続前にヘルスチェック
-    if (process.env.NODE_ENV === 'production') {
-      console.log('本番環境のヘルスチェック開始...');
-      fetch('/socket.io/health')
-        .then(response => response.json())
-        .then(data => {
-          console.log('ヘルスチェック結果:', data);
-        })
-        .catch(error => {
-          console.error('ヘルスチェック失敗:', error);
-        });
-    }
-    
-    const newSocket = io(socketUrl, {
-      transports: ['polling', 'websocket'],
-      timeout: 60000,
-      forceNew: true,
-      upgrade: true,
-      rememberUpgrade: false,
-      pingTimeout: 60000,
-      pingInterval: 25000
-    });
-    setSocket(newSocket);
-
-    newSocket.on('connect', () => {
-      console.log('Socket.IO接続成功');
-      setConnected(true);
-      newSocket.emit('join-room', roomId);
-    });
-
-    newSocket.on('disconnect', (reason) => {
-      console.log('Socket.IO切断:', reason);
-      setConnected(false);
-    });
-
-    newSocket.on('connect_error', (error) => {
-      console.error('Socket.IO接続エラー:', error);
-      setConnected(false);
-    });
-
-    newSocket.on('room-messages', (roomMessages: Message[]) => {
-      setMessages(roomMessages);
-    });
-
-    newSocket.on('new-reaction', (message: Message) => {
-      setMessages(prev => [...prev, message]);
-      
-      // 反応のみをフローティング表示
-      if (message.type === 'reaction') {
-        const floatingMessage = { 
-          ...message, 
-          id: Date.now().toString(),
-          position: { 
-            x: Math.random() * 80 + 10, 
-            y: Math.random() * 60 + 20 
-          }
-        };
-        setFloatingMessages(prev => [...prev, floatingMessage]);
+    const initializeSocket = async () => {
+      if (process.env.NODE_ENV === 'production') {
+        console.log('本番環境のヘルスチェック開始...');
+        let healthCheckRetries = 0;
+        const maxHealthRetries = 10;
         
-        setTimeout(() => {
-          setFloatingMessages(prev => prev.filter(m => m.id !== floatingMessage.id));
-        }, 3000);
+        while (healthCheckRetries < maxHealthRetries) {
+          try {
+            const response = await fetch('/socket.io/health');
+            const data = await response.json();
+            console.log('ヘルスチェック結果:', data);
+            if (data.status === 'ok') {
+              console.log('Socket.IOサーバー準備完了');
+              break;
+            }
+          } catch (error) {
+            console.error(`ヘルスチェック失敗 (${healthCheckRetries + 1}/${maxHealthRetries}):`, error);
+            healthCheckRetries++;
+            if (healthCheckRetries < maxHealthRetries) {
+              await new Promise(resolve => setTimeout(resolve, 2000));
+            }
+          }
+        }
       }
-    });
+      
+      const newSocket = io(socketUrl, {
+        transports: ['polling', 'websocket'],
+        timeout: 60000,
+        forceNew: true,
+        upgrade: true,
+        rememberUpgrade: false,
+        reconnection: true,
+        reconnectionDelay: 2000,
+        reconnectionAttempts: 10
+      });
+      
+      // Socket.IOイベントハンドラーの設定
+      newSocket.on('connect', () => {
+        console.log('Socket.IO接続成功');
+        setConnected(true);
+        newSocket.emit('join-room', roomId);
+      });
 
-    newSocket.on('message-updated', (updatedMessage: Message) => {
-      setMessages(prev => prev.map(msg => 
-        msg.id === updatedMessage.id ? updatedMessage : msg
-      ));
-    });
+      newSocket.on('disconnect', (reason) => {
+        console.log('Socket.IO切断:', reason);
+        setConnected(false);
+      });
 
-    newSocket.on('chat-exported', (exportData: any) => {
-      const dataStr = JSON.stringify(exportData, null, 2);
-      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-      const exportFileDefaultName = `chat_${roomId}_${new Date().toISOString().slice(0,10)}.json`;
-      const linkElement = document.createElement('a');
-      linkElement.setAttribute('href', dataUri);
-      linkElement.setAttribute('download', exportFileDefaultName);
-      linkElement.click();
-    });
+      newSocket.on('connect_error', (error) => {
+        console.error('Socket.IO接続エラー:', error);
+        setConnected(false);
+      });
+
+      newSocket.on('reconnect', (attemptNumber) => {
+        console.log(`Socket.IO再接続成功 (試行回数: ${attemptNumber})`);
+        setConnected(true);
+      });
+
+      newSocket.on('reconnect_error', (error) => {
+        console.error('Socket.IO再接続エラー:', error);
+        setConnected(false);
+      });
+
+      newSocket.on('reconnect_failed', () => {
+        console.error('Socket.IO再接続失敗: 最大試行回数に達しました');
+        setConnected(false);
+      });
+
+      newSocket.on('room-messages', (roomMessages: Message[]) => {
+        setMessages(roomMessages);
+      });
+
+      newSocket.on('new-reaction', (message: Message) => {
+        setMessages(prev => [...prev, message]);
+        
+        // 反応のみをフローティング表示
+        if (message.type === 'reaction') {
+          const floatingMessage = { 
+            ...message, 
+            id: Date.now().toString(),
+            position: { 
+              x: Math.random() * 80 + 10, 
+              y: Math.random() * 60 + 20 
+            }
+          };
+          setFloatingMessages(prev => [...prev, floatingMessage]);
+          
+          setTimeout(() => {
+            setFloatingMessages(prev => prev.filter(m => m.id !== floatingMessage.id));
+          }, 3000);
+        }
+      });
+
+      newSocket.on('message-updated', (updatedMessage: Message) => {
+        setMessages(prev => prev.map(msg => 
+          msg.id === updatedMessage.id ? updatedMessage : msg
+        ));
+      });
+
+      newSocket.on('chat-exported', (exportData: any) => {
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+        const exportFileDefaultName = `chat_${roomId}_${new Date().toISOString().slice(0,10)}.json`;
+        const linkElement = document.createElement('a');
+        linkElement.setAttribute('href', dataUri);
+        linkElement.setAttribute('download', exportFileDefaultName);
+        linkElement.click();
+      });
+
+      setSocket(newSocket);
+    };
+    
+    initializeSocket();
 
     return () => {
-      newSocket.disconnect();
+      if (socket) {
+        socket.disconnect();
+      }
     };
   }, [roomId]);
 
