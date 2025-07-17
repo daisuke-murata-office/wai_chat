@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: wai-chat
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        fromService:
+          type: web
+          name: wai-chat
+          property: port
