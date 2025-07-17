@@ -11,7 +11,7 @@ const nextConfig = {
         },
         {
           source: '/socket.io',
-          destination: `http://localhost:${socketPort}/socket.io`,
+          destination: `http://localhost:${socketPort}/socket.io/`,
         },
         {
           source: '/socket.io/:path*',
@@ -28,7 +28,7 @@ const nextConfig = {
         },
         {
           source: '/socket.io',
-          destination: `http://${socketHost}:3001/socket.io`,
+          destination: `http://${socketHost}:3001/socket.io/`,
         },
         {
           source: '/socket.io/:path*',

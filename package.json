@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -H 0.0.0.0",
     "build": "next build",
-    "start": "bash -c 'npx tsx src/server.ts & sleep 5 && next start -H 0.0.0.0 -p $PORT'",
+    "start": "concurrently \"npx tsx src/server.ts\" \"sleep 10 && next start -H 0.0.0.0 -p $PORT\"",
     "start:prod": "concurrently \"npx tsx src/server.ts\" \"next start -p $PORT\"",
     "lint": "next lint",
     "server": "npx tsx src/server.ts",
