@@ -4,12 +4,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 このファイルは、このリポジトリで作業するClaude Code (claude.ai/code)にガイダンスを提供します。
 
+## 言語設定
+**重要**: このプロジェクトでは日本語で応答してください。すべてのコミュニケーションは日本語で行ってください。
+
 ## プロジェクト概要
 
 ワイチャ！は、オンラインセミナー中に匿名でリアルタイム反応・質問投稿・回答機能を提供するセミナー反応システムです。アプリケーションの構成：
 
 - **フロントエンド**: Next.js 14 + React + TypeScript
-- **リアルタイム通信**: Socket.IOサーバー（ポート3001）
+- **リアルタイム通信**: Socket.IOサーバー（開発: ポート3001、本番: $PORT+1）
 - **スタイリング**: TailwindCSS
 - **アーキテクチャ**: 独立したSocket.IOサーバー + Next.jsフロントエンド
 
@@ -33,7 +36,7 @@ npm run dev     # Next.jsフロントエンド（ポート3000）
 ### 本番環境
 ```bash
 npm run build
-npm run start
+npm run start        # Socket.IOサーバー（$PORT+1）+ Next.jsサーバー（$PORT）
 ```
 
 ### リント・型チェック
@@ -109,6 +112,12 @@ src/
 - エクスポート機能はJSON形式でクライアントサイドダウンロード
 
 ## 最新の機能追加
+
+### v2.1.2（Render本番環境対応）
+- **本番環境ポート設定修正**：Socket.IOサーバーが$PORT+1で動作するよう修正
+- **動的Socket.IO接続**：フロントエンドが本番環境で適切なポートに接続
+- **環境判定対応**：NODE_ENV=productionでの本番モード判定
+- **プロキシ設定改善**：Next.jsリライトルールの本番環境対応
 
 ### v2.1.1（ネットワーク対応強化）
 - **動的ホスト名対応**：IPアドレス変更時の自動接続対応

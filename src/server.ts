@@ -106,7 +106,11 @@ io.on('connection', (socket) => {
   });
 });
 
-const SOCKET_PORT = process.env.SOCKET_PORT || 3001;
+// Renderでは$PORT+1を使用、ローカルでは3001
+const SOCKET_PORT = process.env.NODE_ENV === 'production' 
+  ? (process.env.PORT ? Number(process.env.PORT) + 1 : 10001)
+  : (process.env.SOCKET_PORT || 3001);
+
 server.listen(Number(SOCKET_PORT), '0.0.0.0', () => {
   console.log(`Socket.IO server running on port ${SOCKET_PORT}`);
   console.log(`Access from local network: http://[YOUR-IP]:${SOCKET_PORT}`);

@@ -52,7 +52,10 @@ export default function Room() {
   }, [messages, isAtBottom]);
 
   useEffect(() => {
-    const newSocket = io(`http://${window.location.hostname}:3001`);
+    const socketUrl = process.env.NODE_ENV === 'production' 
+      ? `${window.location.protocol}//${window.location.hostname}:${window.location.port ? Number(window.location.port) + 1 : 10001}`
+      : `http://${window.location.hostname}:3001`;
+    const newSocket = io(socketUrl);
     setSocket(newSocket);
 
     newSocket.on('connect', () => {
