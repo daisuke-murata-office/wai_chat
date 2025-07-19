@@ -246,36 +246,32 @@ export default function Room() {
         );
       })}
 
-      <div className="container mx-auto px-4 py-4 md:py-8 min-h-screen flex flex-col">
+      <div className="container mx-auto px-4 py-8 h-screen flex flex-col">
         {/* ヘッダー */}
-        <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 mb-4 md:mb-6 flex-shrink-0">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-white rounded-lg shadow-lg p-6 mb-6 flex-shrink-0">
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-xl md:text-2xl font-bold text-gray-800">ルーム</h1>
-              <p className="text-sm md:text-base text-gray-800">ルームID: <span className="font-mono font-bold text-blue-600">{roomId}</span></p>
+              <h1 className="text-2xl font-bold text-gray-800">ルーム</h1>
+              <p className="text-gray-800">ルームID: <span className="font-mono font-bold text-blue-600">{roomId}</span></p>
             </div>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
-              <div className="flex items-center gap-2">
-                <div className={`w-3 h-3 rounded-full ${connected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-                <span className="text-sm text-gray-800">
-                  {connected ? '接続中' : '切断中'}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={exportChat}
-                  className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-3 md:px-4 rounded-lg transition-colors text-xs md:text-sm"
-                  disabled={!connected}
-                >
-                  エクスポート
-                </button>
-                <Link
-                  href="/"
-                  className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-3 md:px-4 rounded-lg transition-colors text-xs md:text-sm"
-                >
-                  ホーム
-                </Link>
-              </div>
+            <div className="flex items-center gap-4">
+              <div className={`w-3 h-3 rounded-full ${connected ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <span className="text-sm text-gray-800">
+                {connected ? '接続中' : '切断中'}
+              </span>
+              <button
+                onClick={exportChat}
+                className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm"
+                disabled={!connected}
+              >
+                会話をエクスポート
+              </button>
+              <Link
+                href="/"
+                className="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm"
+              >
+                ホームに戻る
+              </Link>
             </div>
           </div>
         </div>
@@ -283,18 +279,14 @@ export default function Room() {
         {/* メインコンテンツ */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* チャットエリア */}
-          <div className="flex-1 bg-white rounded-lg shadow-lg p-4 md:p-6 mb-4 md:mb-6 flex flex-col min-h-0">
-            <h2 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4">質問・コメント</h2>
+          <div className="flex-1 bg-white rounded-lg shadow-lg p-6 mb-6 flex flex-col min-h-0">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">質問・コメント</h2>
             
             <div 
               ref={chatContainerRef}
               className="flex-1 overflow-y-auto space-y-4 mb-4 pr-2 min-h-0 chat-container"
               onScroll={handleScroll}
-              style={{ 
-                minHeight: '300px',
-                maxHeight: 'min(60vh, 600px)',
-                height: 'calc(100vh - 480px)'
-              }}
+              style={{ maxHeight: '60vh' }}
             >
               {allChatMessages.length === 0 ? (
                 <p className="text-gray-700 text-center py-8">まだ質問・コメントがありません</p>
@@ -406,9 +398,9 @@ export default function Room() {
           </div>
 
           {/* 反応ボタン */}
-          <div className="bg-white rounded-lg shadow-lg p-4 md:p-6 flex-shrink-0">
-            <h2 className="text-base md:text-lg font-semibold text-gray-800 mb-3 md:mb-4">反応を送る</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 md:gap-3">
+          <div className="bg-white rounded-lg shadow-lg p-6 flex-shrink-0">
+            <h2 className="text-lg font-semibold text-gray-800 mb-4">反応を送る</h2>
+            <div className="grid grid-cols-4 gap-3">
               {reactionButtons.map((reaction) => {
                 const colors = {
                   'へぇ': 'text-orange-500 bg-orange-50 hover:bg-orange-100 border-orange-200',
@@ -422,10 +414,10 @@ export default function Room() {
                   <button
                     key={reaction.text}
                     onClick={() => sendReaction(reaction.text, 'reaction')}
-                    className={`${colorClass} border rounded-lg p-3 md:p-4 text-center transition-colors`}
+                    className={`${colorClass} border rounded-lg p-4 text-center transition-colors`}
                     disabled={!connected}
                   >
-                    <div className="text-base md:text-lg font-bold">{reaction.text}</div>
+                    <div className="text-lg font-bold">{reaction.text}</div>
                   </button>
                 );
               })}
