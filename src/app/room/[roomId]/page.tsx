@@ -248,7 +248,7 @@ export default function Room() {
 
       <div className="container mx-auto px-4 py-8 h-screen flex flex-col">
         {/* ヘッダー */}
-        <div className="bg-white rounded-lg shadow-lg p-6 mb-6 flex-shrink-0">
+        <div className="bg-white rounded-lg shadow-lg p-4 mb-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
               <p className="text-gray-800">ルームID: <span className="font-mono font-bold text-blue-600">{roomId}</span></p>
@@ -278,7 +278,7 @@ export default function Room() {
         {/* メインコンテンツ */}
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* チャットエリア */}
-          <div className="flex-1 bg-white rounded-lg shadow-lg p-6 mb-6 flex flex-col min-h-0">
+          <div className="flex-1 bg-white rounded-lg shadow-lg p-4 mb-4 flex flex-col min-h-0">
             
             <div 
               ref={chatContainerRef}
@@ -396,7 +396,7 @@ export default function Room() {
           </div>
 
           {/* 反応ボタン */}
-          <div className="bg-white rounded-lg shadow-lg p-6 flex-shrink-0">
+          <div className="bg-white rounded-lg shadow-lg p-4 flex-shrink-0">
             <div className="grid grid-cols-4 gap-3">
               {reactionButtons.map((reaction) => {
                 const colors = {
