@@ -279,7 +279,6 @@ export default function Room() {
         <div className="flex-1 flex flex-col overflow-hidden">
           {/* チャットエリア */}
           <div className="flex-1 bg-white rounded-lg shadow-lg p-6 mb-6 flex flex-col min-h-0">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4">質問・コメント</h2>
             
             <div 
               ref={chatContainerRef}
