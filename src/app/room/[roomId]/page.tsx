@@ -344,7 +344,7 @@ export default function Room() {
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 placeholder-gray-500 resize-none"
                   rows={2}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey && e.currentTarget.value.trim()) {
+                    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && e.currentTarget.value.trim()) {
                       e.preventDefault();
                       sendReaction(e.currentTarget.value, 'question');
                       e.currentTarget.value = '';
@@ -372,7 +372,7 @@ export default function Room() {
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-gray-900 placeholder-gray-500 resize-none"
                   rows={2}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey && e.currentTarget.value.trim()) {
+                    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing && e.currentTarget.value.trim()) {
                       e.preventDefault();
                       sendReaction(e.currentTarget.value, 'comment');
                       e.currentTarget.value = '';
