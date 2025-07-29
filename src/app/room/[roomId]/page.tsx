@@ -210,6 +210,7 @@ export default function Room() {
     { text: 'いいね', label: 'いいね' },
     { text: '？？？', label: '？？？' },
     { text: 'ぱちぱち', label: 'ぱちぱち' },
+    { text: 'www', label: 'www' },
   ];
 
   const questionMessages = messages.filter(msg => msg.type === 'question');
@@ -226,7 +227,8 @@ export default function Room() {
           'へぇ': 'text-orange-500',
           'いいね': 'text-red-500',
           '？？？': 'text-yellow-500',
-          'ぱちぱち': 'text-green-500'
+          'ぱちぱち': 'text-green-500',
+          'www': 'text-purple-500'
         };
         const colorClass = colors[msg.message as keyof typeof colors] || 'text-blue-600';
         
@@ -397,13 +399,14 @@ export default function Room() {
 
           {/* 反応ボタン */}
           <div className="bg-white rounded-lg shadow-lg p-4 flex-shrink-0">
-            <div className="grid grid-cols-4 gap-3">
+            <div className="grid grid-cols-5 gap-3">
               {reactionButtons.map((reaction) => {
                 const colors = {
                   'へぇ': 'text-orange-500 bg-orange-50 hover:bg-orange-100 border-orange-200',
                   'いいね': 'text-red-500 bg-red-50 hover:bg-red-100 border-red-200',
                   '？？？': 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100 border-yellow-200',
-                  'ぱちぱち': 'text-green-500 bg-green-50 hover:bg-green-100 border-green-200'
+                  'ぱちぱち': 'text-green-500 bg-green-50 hover:bg-green-100 border-green-200',
+                  'www': 'text-purple-500 bg-purple-50 hover:bg-purple-100 border-purple-200'
                 };
                 const colorClass = colors[reaction.text as keyof typeof colors] || 'text-blue-600 bg-blue-50 hover:bg-blue-100 border-blue-200';
                 
