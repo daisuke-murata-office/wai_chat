@@ -29,6 +29,7 @@ export default function Room() {
   const [isAtBottom, setIsAtBottom] = useState(true);
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const [replyText, setReplyText] = useState('');
+  const [expandedReplies, setExpandedReplies] = useState<Set<string>>(new Set());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const chatContainerRef = useRef<HTMLDivElement>(null);
 
@@ -199,6 +200,18 @@ export default function Room() {
     }
   };
 
+  const toggleReplies = (messageId: string) => {
+    setExpandedReplies(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(messageId)) {
+        newSet.delete(messageId);
+      } else {
+        newSet.add(messageId);
+      }
+      return newSet;
+    });
+  };
+
   const exportChat = () => {
     if (socket && connected) {
       socket.emit('export-chat', { roomId });
@@ -225,10 +238,10 @@ export default function Room() {
       {floatingMessages.map((msg) => {
         const colors = {
           'へぇ': 'text-orange-500',
-          'いいね': 'text-red-500',
-          '？？？': 'text-yellow-500',
-          'ぱちぱち': 'text-green-500',
-          'www': 'text-purple-500'
+          'いいね': 'text-blue-500',
+          '？？？': 'text-red-500',
+          'ぱちぱち': 'text-yellow-500',
+          'www': 'text-green-500'
         };
         const colorClass = colors[msg.message as keyof typeof colors] || 'text-blue-600';
         
@@ -315,14 +328,17 @@ export default function Room() {
                       </div>
                       <div className="flex items-center gap-2">
                         {msg.type === 'question' && msg.replies.length > 0 && (
-                          <span className="text-xs bg-blue-500 text-white px-2 py-1 rounded-full">
+                          <button
+                            onClick={() => toggleReplies(msg.id)}
+                            className="text-xs bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-full transition-colors"
+                          >
                             {msg.replies.length}件の回答
-                          </span>
+                          </button>
                         )}
                         {msg.type === 'question' && (
                           <button
                             onClick={() => setSelectedMessage(msg)}
-                            className="text-xs bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-full transition-colors"
+                            className="text-xs bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded-full transition-colors"
                           >
                             回答
                           </button>
@@ -330,6 +346,21 @@ export default function Room() {
                       </div>
                     </div>
                     <p className="text-gray-900 whitespace-pre-wrap">{msg.message}</p>
+                    
+                    {/* 回答の表示 */}
+                    {msg.type === 'question' && expandedReplies.has(msg.id) && msg.replies.length > 0 && (
+                      <div className="mt-4 space-y-2">
+                        <h4 className="text-sm font-medium text-gray-800">回答:</h4>
+                        {msg.replies.map((reply) => (
+                          <div key={reply.id} className="p-3 bg-gray-50 rounded-lg border-l-4 border-blue-500">
+                            <p className="text-xs text-gray-600 mb-1">
+                              {new Date(reply.timestamp).toLocaleString()}
+                            </p>
+                            <p className="text-sm text-gray-900 whitespace-pre-wrap">{reply.reply}</p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))
               )}
@@ -403,10 +434,10 @@ export default function Room() {
               {reactionButtons.map((reaction) => {
                 const colors = {
                   'へぇ': 'text-orange-500 bg-orange-50 hover:bg-orange-100 border-orange-200',
-                  'いいね': 'text-red-500 bg-red-50 hover:bg-red-100 border-red-200',
-                  '？？？': 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100 border-yellow-200',
-                  'ぱちぱち': 'text-green-500 bg-green-50 hover:bg-green-100 border-green-200',
-                  'www': 'text-purple-500 bg-purple-50 hover:bg-purple-100 border-purple-200'
+                  'いいね': 'text-blue-500 bg-blue-50 hover:bg-blue-100 border-blue-200',
+                  '？？？': 'text-red-500 bg-red-50 hover:bg-red-100 border-red-200',
+                  'ぱちぱち': 'text-yellow-500 bg-yellow-50 hover:bg-yellow-100 border-yellow-200',
+                  'www': 'text-green-500 bg-green-50 hover:bg-green-100 border-green-200'
                 };
                 const colorClass = colors[reaction.text as keyof typeof colors] || 'text-blue-600 bg-blue-50 hover:bg-blue-100 border-blue-200';
                 
