@@ -338,7 +338,7 @@ export default function Room() {
                         {msg.type === 'question' && (
                           <button
                             onClick={() => setSelectedMessage(msg)}
-                            className="text-xs bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded-full transition-colors"
+                            className="text-xs bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-full transition-colors"
                           >
                             回答
                           </button>
